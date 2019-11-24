@@ -1,0 +1,23 @@
+dependencies {
+    // kotlin
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+    compile 'org.jetbrains.kotlin:kotlin-reflect'
+    //compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+
+    if(env == 'dev') {
+        compile project(':jkutil') 
+        compile project(':jkguard')
+        compile project(':jkmvc-orm') // orm
+    }else{
+        compile "net.jkcode.jkutil:jkutil:$jkutil_version"
+        compile "net.jkcode.jkguard:jkguard:$jkguard_version"
+        compile "net.jkcode.jkmvc:jkmvc-orm:$jkmvc_version" // orm
+    }
+
+    // test
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+    testCompile 'junit:junit:4.11'
+
+    // jdbc
+    runtime "mysql:mysql-connector-java:5.1.6"
+}

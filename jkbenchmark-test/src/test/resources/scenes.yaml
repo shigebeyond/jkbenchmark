@@ -1,0 +1,12 @@
+# 动作
+action:
+  - nth
+# 并发数
+concurrents:
+  - 1
+# 请求数
+requests:
+  - 100
+# 是否异步
+async:
+  - false # 无异步

@@ -1,0 +1,17 @@
+include 'jkbenchmark-test', 'jkbenchmark-web'
+
+rootProject.name = 'jkbenchmark'
+
+// 添加子项目
+if(env == 'dev') {
+    // jkutil
+    include 'jkutil'
+    project(':jkutil').projectDir = new File('../jkutil')
+
+    // 应用守护
+    include 'jkguard'
+    project(':jkguard').projectDir = new File('../jkguard')
+
+    include 'jkmvc-orm'
+    project(':jkmvc-orm').projectDir = new File('../jkmvc/jkmvc-orm')
+}

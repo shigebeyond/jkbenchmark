@@ -1,0 +1,20 @@
+# 动作
+action:
+  - test
+# 并发数
+concurrents:
+  - 1
+  - 10
+  - 20
+  - 50
+# 请求数
+requests:
+  - 1000
+  - 2000
+  - 3000
+  - 4000
+  - 5000
+# 是否异步
+async:
+  - false
+  - true

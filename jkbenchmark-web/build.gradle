@@ -1,0 +1,6 @@
+dependencies {
+
+    // other project
+    compile project(':jkbenchmark-test')
+
+}
