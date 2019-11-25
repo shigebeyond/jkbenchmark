@@ -6,4 +6,4 @@ target/
 *.log
 out/
 upload/
-jkbenchmark-example/jetty/
+jkbenchmark-web/jetty/
