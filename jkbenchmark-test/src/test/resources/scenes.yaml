@@ -1,12 +1,16 @@
 # 动作
 action:
   - nth
+  - db
 # 并发数
 concurrents:
   - 1
+  - 2
 # 请求数
 requests:
   - 100
+  - 200
 # 是否异步
 async:
   - false # 无异步
+  - true

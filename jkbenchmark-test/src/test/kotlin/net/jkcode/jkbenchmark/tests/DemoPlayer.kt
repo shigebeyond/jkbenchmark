@@ -21,7 +21,7 @@ class DemoPlayer: IBenchmarkPlayer{
     /**
      * 玩家名
      */
-    override val name: String = "demo"
+    override val name: String = "shi"
 
     /**
      * 获得同步动作

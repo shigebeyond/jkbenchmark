@@ -33,10 +33,10 @@ object BenchmarkResultAnalyzer {
      * 解析测试结果日志
      * 格式: 2019-11-20 17:00:28 [INFO] motan-file-c10-n40000-syn | Runtime: 1431.09 ms, Avg TPS: 27950.64, Avg RT: 0.36ms
      * @param logDir 日志目录
-     * @param appName　应用名
+     * @param app　应用名
      * @return
      */
-    public fun parseResultLog(logDir: String, appName: String): List<BenchmarkResultModel> {
+    public fun parseResultLog(logDir: String, app: String): List<BenchmarkResultModel> {
         val dir = File(logDir)
         if(!dir.exists())
             throw IllegalArgumentException("目录不存在: logDir")
@@ -49,6 +49,7 @@ object BenchmarkResultAnalyzer {
                 f.forEachLine { line ->
                     val m = reg.find(line)!!
                     val result = BenchmarkResultModel()
+                    result.app = app
                     result.player = m.groups[2]!!.value
                     result.action = m.groups[3]!!.value
                     result.concurrents = m.groups[4]!!.value.toInt()

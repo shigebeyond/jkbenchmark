@@ -45,54 +45,6 @@ const bar = {
   ],
 };
 
-const doughnut = {
-  labels: [
-    'Red',
-    'Green',
-    'Yellow',
-  ],
-  datasets: [
-    {
-      data: [300, 50, 100],
-      backgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56',
-      ],
-      hoverBackgroundColor: [
-        '#FF6384',
-        '#36A2EB',
-        '#FFCE56',
-      ],
-    }],
-};
-
-const radar = {
-  labels: ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: 'rgba(179,181,198,0.2)',
-      borderColor: 'rgba(179,181,198,1)',
-      pointBackgroundColor: 'rgba(179,181,198,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(179,181,198,1)',
-      data: [65, 59, 90, 81, 56, 55, 40],
-    },
-    {
-      label: 'My Second dataset',
-      backgroundColor: 'rgba(255,99,132,0.2)',
-      borderColor: 'rgba(255,99,132,1)',
-      pointBackgroundColor: 'rgba(255,99,132,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(255,99,132,1)',
-      data: [28, 48, 40, 19, 96, 27, 100],
-    },
-  ],
-};
-
 const pie = {
   labels: [
     'Red',
@@ -151,7 +103,56 @@ const options = {
   maintainAspectRatio: false
 }
 
+/*
+// 查app
+fetch('benchmark/apps').then(res => {
+   console.log('res info is:',res);
+   if(res.code == 0){
+
+   }else{
+    console.log('request error');
+   }
+},(err)=>{
+    //网络错误、连接失败、无法解析对方数据
+    console.log('request error');
+})
+
+// 获得app下的字段值
+fetch('benchmark/fieldValues').then(res => {
+   console.log('res info is:',res);
+   if(res.code == 0){
+
+   }else{
+    console.log('request error');
+   }
+},(err)=>{
+    //网络错误、连接失败、无法解析对方数据
+    console.log('request error');
+})
+*/
+
+
 class Charts extends Component {
+  constructor(){
+    super();
+    this.state = {
+      users:[],
+      mIcon:''
+    }
+  }
+
+  async componentDidMount(){
+    let res = await fetch('./info.json')
+    debugger;
+    /*let res = await fetch('./info.json')
+    let users = await res.json();
+    let res1 = await fetch('./mCat.jpg')
+    let mBolb = await res1.blob();
+    this.setState({
+      users,
+      mIcon:URL.createObjectURL(mBolb)
+    })*/
+  }
   render() {
     return (
       <div className="animated fadeIn">
@@ -188,36 +189,6 @@ class Charts extends Component {
           </Card>
           <Card>
             <CardHeader>
-              Doughnut Chart
-              <div className="card-header-actions">
-                <a href="http://www.chartjs.org" className="card-header-action">
-                  <small className="text-muted">docs</small>
-                </a>
-              </div>
-            </CardHeader>
-            <CardBody>
-              <div className="chart-wrapper">
-                <Doughnut data={doughnut} />
-              </div>
-            </CardBody>
-          </Card>
-          <Card>
-            <CardHeader>
-              Radar Chart
-              <div className="card-header-actions">
-                <a href="http://www.chartjs.org" className="card-header-action">
-                  <small className="text-muted">docs</small>
-                </a>
-              </div>
-            </CardHeader>
-            <CardBody>
-              <div className="chart-wrapper">
-                <Radar data={radar} />
-              </div>
-            </CardBody>
-          </Card>
-          <Card>
-            <CardHeader>
               Pie Chart
               <div className="card-header-actions">
                 <a href="http://www.chartjs.org" className="card-header-action">
@@ -228,21 +199,6 @@ class Charts extends Component {
             <CardBody>
               <div className="chart-wrapper">
                 <Pie data={pie} />
-              </div>
-            </CardBody>
-          </Card>
-          <Card>
-            <CardHeader>
-              Polar Area Chart
-              <div className="card-header-actions">
-                <a href="http://www.chartjs.org" className="card-header-action">
-                  <small className="text-muted">docs</small>
-                </a>
-              </div>
-            </CardHeader>
-            <CardBody>
-              <div className="chart-wrapper">
-                <Polar data={polar} options={options}/>
               </div>
             </CardBody>
           </Card>

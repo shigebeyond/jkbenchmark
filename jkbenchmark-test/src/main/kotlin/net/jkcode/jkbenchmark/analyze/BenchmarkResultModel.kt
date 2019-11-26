@@ -1,7 +1,7 @@
 package net.jkcode.jkbenchmark.analyze
 
-import net.jkcode.jkmvc.orm.OrmMeta 
-import net.jkcode.jkmvc.orm.Orm 
+import net.jkcode.jkmvc.orm.Orm
+import net.jkcode.jkmvc.orm.OrmMeta
 
 /**
  * 性能测试结果
@@ -35,5 +35,6 @@ class  BenchmarkResultModel(id:Int? = null): Orm(id) {
 	public var rt:Double by property() // 响应时间
 
 	public var errPct:Int by property() // 错误百分比
+
 
 }
