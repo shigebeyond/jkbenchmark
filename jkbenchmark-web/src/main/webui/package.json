@@ -37,6 +37,7 @@
     "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
+    "query-string": "^6.9.0",
     "react-scripts": "^3.0.1"
   },
   "scripts": {

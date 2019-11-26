@@ -1,0 +1,6 @@
+{
+  "name": "Benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Benchmark.js"
+}

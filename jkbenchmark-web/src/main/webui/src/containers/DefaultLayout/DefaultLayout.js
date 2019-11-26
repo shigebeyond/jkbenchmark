@@ -15,8 +15,6 @@ import {
   AppBreadcrumb2 as AppBreadcrumb,
   AppSidebarNav2 as AppSidebarNav,
 } from '@coreui/react';
-// sidebar nav config
-import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
 
@@ -25,6 +23,54 @@ const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 class DefaultLayout extends Component {
+
+  constructor(){
+    super();
+    this.state = {
+      apps:[],
+      nav: [ // sidebar nav config
+        {
+          name: 'Dashboard',
+          url: '/dashboard',
+          icon: 'icon-speedometer',
+          badge: {
+            variant: 'info',
+            text: 'NEW',
+          },
+        },
+        {
+          name: 'Charts',
+          url: '/charts',
+          icon: 'icon-pie-chart',
+        }
+      ]
+    }
+  }
+
+  async componentDidMount(){
+    let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/apps')
+    res = await res.json()
+    //console.log(res)
+    let apps = res.data;
+    let nav = apps.map(app => {
+        return {
+             name: app,
+             url: '/all',
+             icon: 'icon-star',
+             children: [
+               {
+                 name: 'Benchmark',
+                 url: '/benchmark?app=' + app,
+                 icon: 'icon-star',
+               }
+             ],
+           }
+    })
+    this.setState({
+      apps,
+      nav
+    })
+  }
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
@@ -46,7 +92,7 @@ class DefaultLayout extends Component {
             <AppSidebarHeader />
             <AppSidebarForm />
             <Suspense>
-            <AppSidebarNav navConfig={navigation} {...this.props} router={router}/>
+            <AppSidebarNav navConfig={{items: this.state.nav}} {...this.props} router={router}/>
             </Suspense>
             <AppSidebarFooter />
             <AppSidebarMinimizer />

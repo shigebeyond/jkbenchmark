@@ -103,56 +103,7 @@ const options = {
   maintainAspectRatio: false
 }
 
-/*
-// 查app
-fetch('benchmark/apps').then(res => {
-   console.log('res info is:',res);
-   if(res.code == 0){
-
-   }else{
-    console.log('request error');
-   }
-},(err)=>{
-    //网络错误、连接失败、无法解析对方数据
-    console.log('request error');
-})
-
-// 获得app下的字段值
-fetch('benchmark/fieldValues').then(res => {
-   console.log('res info is:',res);
-   if(res.code == 0){
-
-   }else{
-    console.log('request error');
-   }
-},(err)=>{
-    //网络错误、连接失败、无法解析对方数据
-    console.log('request error');
-})
-*/
-
-
 class Charts extends Component {
-  constructor(){
-    super();
-    this.state = {
-      users:[],
-      mIcon:''
-    }
-  }
-
-  async componentDidMount(){
-    let res = await fetch('./info.json')
-    debugger;
-    /*let res = await fetch('./info.json')
-    let users = await res.json();
-    let res1 = await fetch('./mCat.jpg')
-    let mBolb = await res1.blob();
-    this.setState({
-      users,
-      mIcon:URL.createObjectURL(mBolb)
-    })*/
-  }
   render() {
     return (
       <div className="animated fadeIn">
