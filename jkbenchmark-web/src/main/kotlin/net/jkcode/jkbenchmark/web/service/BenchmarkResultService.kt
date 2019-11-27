@@ -31,16 +31,16 @@ object BenchmarkResultService {
     /**
      * 获得趋势值
      * @param where 条件
-     * @param yField y轴字段
+     * @param vsField 对比字段
      * @return
      */
     private val whereFields = listOf("app", "player", "action", "concurrents", "requests", "async")
-    public fun getTrendValues(where: Map<String, Any?>, yField: String): Map<String, Map<String, Any?>> {
+    public fun getTrendValues(where: Map<String, Any?>, vsField: String): Map<String, Map<String, Any?>> {
         val lackWhereFields = whereFields.subtract(where.keys)
-        if(lackWhereFields.isEmpty() || lackWhereFields.size == 1 && lackWhereFields.firstOrNull() == yField){ // 只能有yField可以不在where中
-            val rows = BenchmarkResultModel.queryBuilder().wheres(where).select(yField, "tps", "rt", "err_pct").findMaps()
+        if(lackWhereFields.isEmpty() || lackWhereFields.size == 1 && lackWhereFields.firstOrNull() == vsField){ // 只能有vsField可以不在where中
+            val rows = BenchmarkResultModel.queryBuilder().wheres(where).select(vsField, "tps", "rt", "err_pct").findMaps()
             return rows.associate {
-                it[yField].toString() to it
+                it[vsField].toString() to it
             }
         }
 
