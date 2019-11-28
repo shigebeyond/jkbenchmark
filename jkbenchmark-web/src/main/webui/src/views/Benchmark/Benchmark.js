@@ -64,31 +64,42 @@ const options = {
   maintainAspectRatio: false
 }
 
+const fieldNames = {
+  app: "应用",
+  player: "玩家",
+  action: "动作",
+  concurrents: "并发数",
+  requests: "请求数",
+  async: "异步",
+  yField: 'y轴字段'
+}
+
 class Benchmark extends Component {
   constructor(){
     super();
     this.state = {
       // 选项
-      isToggleOn: true,
-      yField: 'tps',//tps/rt/err_pct
+      player: null,
+      action: null,
+      concurrents: null,
+      requests: null,
+      async: null,
+      yField: null,
 
       // 数据
       fieldValues:{},
       trendValues:{},
     }
-    this.handleClick = this.handleClick.bind(this);
-    this.onYFieldChange = this.onYFieldChange.bind(this);
-  }
- 
-  handleClick() {
-    this.setState({isToggleOn: !this.state.isToggleOn});
+
+    this.queryTrendValues = this.queryTrendValues.bind(this)
   }
 
-  onYFieldChange(e) {
-    this.setState({yField: e.target.value});
+
+  async componentDidMount(){
+    this.queryFieldValues()    
   }
 
-  query(name = ''){
+  getQuery(name = ''){
     let query = qs.parse(this.props.location.search);
     if(name == '')
         return query
@@ -96,8 +107,9 @@ class Benchmark extends Component {
     return query[name]
   }
 
-  async componentDidMount(){
-    let query = 'app='+this.query('app')
+  // 查询字段值
+  async queryFieldValues(){
+    let query = 'app='+this.getQuery('app')
     let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/fieldValues?'+query)
     res = await res.json()
     //console.log(res)
@@ -106,6 +118,70 @@ class Benchmark extends Component {
         fieldValues,
     })
   }
+
+  // 查询趋势数据
+  async queryTrendValues(){
+    // 收集参数
+    let params = {app : this.getQuery('app')}
+    for(let field of ['player', 'action', 'concurrents', 'requests', 'async']){
+      let value = this.state[field]
+      if(value == null){
+        alert("请先指定选项: " + fieldNames[field]);
+        return
+      }
+      params[field] = value;
+    }
+    let query = qs.stringify(params)
+    // 请求趋势数据
+    let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/trendValues?'+query)
+    res = await res.json()
+    //console.log(res)
+    let trendValues = res.data;
+    this.setState({
+        trendValues,
+    })
+  }
+
+  // 渲染字段的单选框列表
+  renderFieldRadios(key, values){
+    let {fieldValues} = this.state;
+    // 添加 y轴字段
+    fieldValues['yField'] = ['tps', 'rt', 'err_pct']
+    //console.log(fieldValues)
+    console.log(this.state)
+    return Object.entries(fieldValues).map(entry => this.renderRadios(entry[0], entry[1]))
+  }
+
+  // 渲染单选框列表
+  renderRadios(key, values){
+    return (
+      <FormGroup key={key} row>
+          <Col md="3">
+            <Label>{fieldNames[key]}</Label>
+          </Col>
+          <Col md="9">
+            {values.map(value => this.renderRadio(key, value))}
+          </Col>
+      </FormGroup>
+    )
+  }
+
+  // 渲染单选框
+  renderRadio(key, value){
+    return (
+      <FormGroup key={value} check inline>
+        <Input className="form-check-input" 
+                type="radio" 
+                name={key}
+                value={value}
+                checked={this.state[key] == value} 
+                onChange={ e => this.setState({[key]: e.target.value}) }
+        />
+        <Label className="form-check-label" check htmlFor="inline-radio3">{value}</Label>
+      </FormGroup>
+    )
+  }
+
   render() {
     return (
       <div className="animated fadeIn">
@@ -116,69 +192,11 @@ class Benchmark extends Component {
             </CardHeader>
             <CardBody>
               <Form action="" method="post" encType="multipart/form-data" className="form-horizontal">
-                <FormGroup row>
-                  <Col md="3">
-                    <Label>Inline Radios</Label>
-                  </Col>
-                  <Col md="9">
-                    <FormGroup check inline>
-                      <Input className="form-check-input" type="radio" id="inline-radio1" name="inline-radios" value="option1" />
-                      <Label className="form-check-label" check htmlFor="inline-radio1">One</Label>
-                    </FormGroup>
-                    <FormGroup check inline>
-                      <Input className="form-check-input" type="radio" id="inline-radio2" name="inline-radios" value="option2" />
-                      <Label className="form-check-label" check htmlFor="inline-radio2">Two</Label>
-                    </FormGroup>
-                    <FormGroup check inline>
-                      <Input className="form-check-input" type="radio" id="inline-radio3" name="inline-radios" value="option3" />
-                      <Label className="form-check-label" check htmlFor="inline-radio3">Three</Label>
-                    </FormGroup>
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Col md="3">
-                    <Label>y轴字段</Label>
-                  </Col>
-                  <Col md="9">
-                    <FormGroup check inline>
-                      <Input className="form-check-input" type="checkbox" id="inline-checkbox1" name="inline-checkbox1" value="option1" />
-                      <Label className="form-check-label" check htmlFor="inline-checkbox1">One</Label>
-                    </FormGroup>
-                    <FormGroup check inline>
-                      <Input className="form-check-input" type="checkbox" id="inline-checkbox2" name="inline-checkbox2" value="option2" />
-                      <Label className="form-check-label" check htmlFor="inline-checkbox2">Two</Label>
-                    </FormGroup>
-                    <FormGroup check inline>
-                      <Input className="form-check-input" type="checkbox" id="inline-checkbox3" name="inline-checkbox3" value="option3" />
-                      <Label className="form-check-label" check htmlFor="inline-checkbox3">Three</Label>
-                    </FormGroup>
-                  </Col>
-                </FormGroup>
-                <FormGroup row>
-                  <Col md="3">
-                    <Label htmlFor="select">Select</Label>
-                  </Col>
-                  <Col xs="12" md="9">
-                    <Input type="select" name="select" id="select">
-                      <option value="0">Please select</option>
-                      <option value="1">Option #1</option>
-                      <option value="2">Option #2</option>
-                      <option value="3">Option #3</option>
-                    </Input>
-                  </Col>
-                </FormGroup>
-                <FormGroup>
-                  <Label htmlFor="yField">y轴字段</Label>
-                  <Input type="select" name="yField" id="yField" onChange={this.onYFieldChange}>
-                    <option value="tps">tps</option>
-                    <option value="rt">rt</option>
-                    <option value="err_pct">err_pct</option>
-                  </Input>
-                </FormGroup>
+                {this.renderFieldRadios()}
               </Form>
             </CardBody>
             <CardFooter>
-              <Button type="submit" size="sm" color="primary"><i className="fa fa-dot-circle-o"></i> Submit</Button>
+              <Button type="button" size="sm" color="primary" onClick={this.queryTrendValues}><i className="fa fa-dot-circle-o"></i> Submit</Button>
               <Button type="reset" size="sm" color="danger"><i className="fa fa-ban"></i> Reset</Button>
             </CardFooter>
           </Card>
