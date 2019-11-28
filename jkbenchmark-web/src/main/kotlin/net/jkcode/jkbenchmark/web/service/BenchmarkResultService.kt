@@ -32,19 +32,28 @@ object BenchmarkResultService {
      * 获得趋势值
      * @param where 条件
      * @param vsField 对比字段
-     * @return
+     * @param xField x轴字段
+     * @return 3维对象: 1 对比字段 2 x轴字段 3 tps/rt/err_pct
      */
     private val whereFields = listOf("app", "player", "action", "concurrents", "requests", "async")
-    public fun getTrendValues(where: Map<String, Any?>, vsField: String): Map<String, Map<String, Any?>> {
-        val lackWhereFields = whereFields.subtract(where.keys)
-        if(lackWhereFields.isEmpty() || lackWhereFields.size == 1 && lackWhereFields.firstOrNull() == vsField){ // 只能有vsField可以不在where中
-            val rows = BenchmarkResultModel.queryBuilder().wheres(where).select(vsField, "tps", "rt", "err_pct").findMaps()
-            return rows.associate {
-                it[vsField].toString() to it
-            }
+    public fun getTrendValues(where: Map<String, Any?>, vsField: String, xField: String): Map<String, Map<String, Map<String, Any?>>> {
+        val lackWhereFields = whereFields.subtract(where.keys + vsField + xField)
+        if(lackWhereFields.isNotEmpty())
+            throw IllegalArgumentException("条件缺少字段: $lackWhereFields")
+
+        val query = BenchmarkResultModel.queryBuilder()
+        for((k, v) in where)
+            if(k != vsField && k != xField)
+                query.where(k, "=", v)
+        val rows = query.select(vsField, xField, "tps", "rt", "err_pct").findMaps()
+        val result = HashMap<String, HashMap<String, Map<String, Any?>>>()
+        for(row in rows){
+            result.getOrPut(row[vsField].toString()) {
+                HashMap()
+            }.put(row[xField].toString(), row)
         }
 
-        throw IllegalArgumentException("条件缺少字段: $lackWhereFields")
+        return result
     }
     
 }

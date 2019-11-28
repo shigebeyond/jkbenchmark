@@ -40,7 +40,8 @@ class BenchmarkController: Controller() {
         // 全部参数就是where
         val where = HashMap(req.httpParams)
         val vsField = where.remove("vsField")!!
-        res.renderJson(0, null, BenchmarkResultService.getTrendValues(where, vsField))
+        val xField = where.remove("xField")!!
+        res.renderJson(0, null, BenchmarkResultService.getTrendValues(where, vsField, xField))
     }
 
 }

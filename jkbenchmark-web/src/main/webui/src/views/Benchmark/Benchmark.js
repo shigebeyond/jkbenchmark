@@ -71,20 +71,23 @@ const fieldNames = {
   concurrents: "并发数",
   requests: "请求数",
   async: "异步",
-  yField: 'y轴字段'
+  xField: 'x轴字段'
 }
 
 class Benchmark extends Component {
   constructor(){
     super();
     this.state = {
-      // 选项
+      // 轴字段
+      vsField: null, // 对比字段
+      xField: null, // x轴字段
+
+      // 查询条件
       player: null,
       action: null,
       concurrents: null,
       requests: null,
       async: null,
-      yField: null,
 
       // 数据
       fieldValues:{},
@@ -142,49 +145,36 @@ class Benchmark extends Component {
     })
   }
 
-  // 渲染字段的单选框列表
-  renderFieldRadios(key, values){
+  // 渲染字段的下拉框
+  renderFieldSelect(key, values){
     let {fieldValues} = this.state;
-    // 添加 y轴字段
-    fieldValues['yField'] = ['tps', 'rt', 'err_pct']
+    // 添加 x轴字段
+    fieldValues['xField'] = ['tps', 'rt', 'err_pct']
     //console.log(fieldValues)
     console.log(this.state)
-    return Object.entries(fieldValues).map(entry => this.renderRadios(entry[0], entry[1]))
+    return Object.entries(fieldValues).map(entry => this.renderSelect(entry[0], entry[1]))
   }
 
-  // 渲染单选框列表
-  renderRadios(key, values){
-    return (
-      <FormGroup key={key} row>
-          <Col md="3">
+  // 渲染下拉框
+  renderSelect(key, values){
+    return values.map(value => {
+        return (
+          <FormGroup key={key}>
             <Label>{fieldNames[key]}</Label>
-          </Col>
-          <Col md="9">
-            {values.map(value => this.renderRadio(key, value))}
-          </Col>
-      </FormGroup>
-    )
-  }
-
-  // 渲染单选框
-  renderRadio(key, value){
-    return (
-      <FormGroup key={value} check inline>
-        <Input className="form-check-input" 
-                type="radio" 
+            <Input type="select"
                 name={key}
-                value={value}
-                checked={this.state[key] == value} 
-                onChange={ e => this.setState({[key]: e.target.value}) }
-        />
-        <Label className="form-check-label" check htmlFor="inline-radio3">{value}</Label>
-      </FormGroup>
-    )
+                onChange={ e => this.setState({[key]: e.target.value}) }>
+              <option value={value}>{value}</option>
+            </Input>
+          </FormGroup>
+        )
+    })
   }
 
   render() {
     return (
       <div className="animated fadeIn">
+      {this.renderFieldSelect()}
         <CardColumns className="cols-2">
           <Card>
             <CardHeader>
@@ -192,7 +182,7 @@ class Benchmark extends Component {
             </CardHeader>
             <CardBody>
               <Form action="" method="post" encType="multipart/form-data" className="form-horizontal">
-                {this.renderFieldRadios()}
+                {this.renderFieldSelect()}
               </Form>
             </CardBody>
             <CardFooter>

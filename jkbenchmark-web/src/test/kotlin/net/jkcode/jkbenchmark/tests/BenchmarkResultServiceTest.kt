@@ -26,19 +26,20 @@ class BenchmarkResultServiceTest {
         var i = 1
         for (player in players)
             for (action in actions)
-                for (concurrents in concurrentses)
+                //for (concurrents in concurrentses)
                     for (requests in requestses) {
                         // 条件字段
                         val where = mapOf(
                                 "app" to app,
                                 "player" to player,
                                 "action" to action,
-                                "concurrents" to concurrents,
+                                //"concurrents" to concurrents,
                                 "requests" to requests
                         )
                         // y轴字段
-                        val yField = "async"
-                        val tvs = BenchmarkResultService.getTrendValues(where, yField)
+                        val vsField = "async"
+                        val xField = "concurrents"
+                        val tvs = BenchmarkResultService.getTrendValues(where, vsField, xField)
                         println(tvs)
                     }
 
