@@ -31,6 +31,7 @@ import {
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import qs from 'query-string';
 
+const colors = [ 'purple', 'red', 'blue', 'aqua', 'yellow', 'black', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'silver', 'teal' ]
 
 const chartOptions = {
   tooltips: {
@@ -109,14 +110,19 @@ class Benchmark extends Component {
     res = await res.json()
     //console.log(res)
     let fieldValues = res.data;
-    this.setState({
-        fieldValues,
-    })
+    let newState = {fieldValues}
+    //只有一个值的字段默认选中
+    for (let key in  fieldValues) {
+      let values = fieldValues[key]
+      if(values.length == 1)
+        newState[key] = values[0]
+    }
+    this.setState(newState)
   }
 
   // 查询趋势数据
   async queryTrendValues(){
-    console.log(this.state)
+    //console.log(this.state)
 
     // 收集参数
     // app
@@ -129,6 +135,10 @@ class Benchmark extends Component {
     }
     if(xField == null){
       alert("请先指定选项: xField");
+      return
+    }
+    if(xField == vsField){
+      alert("xField 跟 vsField 不能一样");
       return
     }
     let params = {app, vsField, xField}
@@ -157,7 +167,16 @@ class Benchmark extends Component {
 
   // 渲染轴字段的下拉框
   renderAxisFieldSelects(){
-    return Object.entries(axisFieldValues).map(entry => this.renderSelect(entry[0], entry[1]))
+    return Object.entries(axisFieldValues).map(entry => {
+      let [key, fields] = entry
+      if(key == 'xField'){ // x轴要去掉只有单个值的字段, 否则曲线数据只有一点, 无法成线
+        fields = fields.filter(field => {
+            let values = this.state.fieldValues[field] || []
+            return values.length > 1
+        })
+      }
+      return this.renderSelect(key, fields)
+    })
   }
 
   // 渲染过滤字段的下拉框
@@ -171,21 +190,21 @@ class Benchmark extends Component {
   // 渲染下拉框
   renderSelect(key, values){
     return (
-      <FormGroup key={key} className="pr-1">
+      <FormGroup key={key} className="pr-1" value={this.state[key]}>
         <Label className="pr-1">{key}</Label>
         <Input type="select"
             name={key}
             onChange={ e => this.setState({[key]: e.target.value}) }>
-          {this.renderOption(null, -1)}
-          {values.map(this.renderOption)}
+          {this.renderOption(key, null, -1)}
+          {values.map((value, i) => this.renderOption(key, value, i))}
         </Input>
       </FormGroup>
     )
   }
 
   // 渲染选项
-  renderOption(value, i){
-    return (<option key={i} value={value}>{value}</option>)
+  renderOption(key, value, i){
+    return (<option key={i} value={value} selected={value == this.state[key]}>{value}</option>)
   }
 
   // 渲染y轴按钮
@@ -206,7 +225,7 @@ class Benchmark extends Component {
   }
 
   // 构建一个对比字段值对应的曲线数据
-  buildDataset(vs){
+  buildDataset(vs, i){
     // trendValues 3维对象: 1 对比字段 2 x轴字段 3 tps/rt/err_pct
     let {xField} = this.state.trendParams
     let {trendValues, fieldValues, yField} = this.state
@@ -219,17 +238,17 @@ class Benchmark extends Component {
       label: `${vs}趋势`,
       fill: false,
       lineTension: 0.1,
-      backgroundColor: 'rgba(75,192,192,0.4)',
-      borderColor: 'rgba(75,192,192,1)',
+      backgroundColor: colors[i],
+      borderColor: colors[i],
       borderCapStyle: 'butt',
       borderDash: [],
       borderDashOffset: 0.0,
       borderJoinStyle: 'miter',
-      pointBorderColor: 'rgba(75,192,192,1)',
+      pointBorderColor: colors[i],
       pointBackgroundColor: '#fff',
       pointBorderWidth: 1,
       pointHoverRadius: 5,
-      pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+      pointHoverBackgroundColor: colors[i],
       pointHoverBorderColor: 'rgba(220,220,220,1)',
       pointHoverBorderWidth: 2,
       pointRadius: 1,

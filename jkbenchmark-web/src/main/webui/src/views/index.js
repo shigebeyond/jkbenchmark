@@ -1,10 +1,6 @@
-import Charts from './Charts';
-import Dashboard from './Dashboard';
-import Widgets from './Widgets';
+import Benchmark from './Benchmark';
 
 export {
-  Charts,
-  Dashboard,
-  Widgets,
+  Benchmark,
 };
 
