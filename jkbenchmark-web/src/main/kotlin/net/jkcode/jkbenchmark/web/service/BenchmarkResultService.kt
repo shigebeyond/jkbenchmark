@@ -24,7 +24,7 @@ object BenchmarkResultService {
     private val fields = arrayOf("player", "action", "concurrents", "requests", "async")
     public fun getFieldValues(app: String): Map<String, List<Any>> {
         return fields.associate { field ->
-            field to BenchmarkResultModel.queryBuilder().distinct().select(field).where("app", "=", app).findColumn<Any>()
+            field to BenchmarkResultModel.queryBuilder().distinct().select(field).where("app", "=", app).orderBy(field).findColumn<Any>()
         }
     }
 
@@ -45,7 +45,7 @@ object BenchmarkResultService {
         for((k, v) in where)
             if(k != vsField && k != xField)
                 query.where(k, "=", v)
-        val rows = query.select(vsField, xField, "tps", "rt", "err_pct").findMaps()
+        val rows = query.select(vsField, xField, "tps", "rt", "err_pct").orderBy(vsField).orderBy(xField).findMaps()
         val result = HashMap<String, HashMap<String, Map<String, Any?>>>()
         for(row in rows){
             result.getOrPut(row[vsField].toString()) {

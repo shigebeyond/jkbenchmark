@@ -41,7 +41,7 @@ const chartOptions = {
 }
 
 // 过滤的字段名
-const filterFields = ['player', 'action', 'concurrents', 'requests', 'async', 'xField'];
+const filterFields = ['player', 'action', 'concurrents', 'requests', 'async'];
 
 // 轴字段值
 const axisFieldValues = {
@@ -63,7 +63,7 @@ class Benchmark extends Component {
       // 轴字段
       vsField: null, // 对比字段
       xField: null, // x轴字段
-      yField: null, // y轴字段
+      yField: 'tps', // y轴字段
 
       // 过滤字段
       player: null,
@@ -74,12 +74,14 @@ class Benchmark extends Component {
 
       // 数据
       fieldValues:{},
+      trendParams:null, // 记录当前查询的参数
       trendValues:null,
     }
 
     this.queryTrendValues = this.queryTrendValues.bind(this)
     this.renderYFieldButton = this.renderYFieldButton.bind(this)
     this.buildLineData = this.buildLineData.bind(this)
+    this.buildDataset = this.buildDataset.bind(this)
   }
 
   async componentDidMount(){
@@ -148,6 +150,7 @@ class Benchmark extends Component {
     //console.log(res)
     let trendValues = res.data;
     this.setState({
+        trendParams: params,
         trendValues,
     })
   }
@@ -192,41 +195,21 @@ class Benchmark extends Component {
 
   // 构建曲线数据
   buildLineData(){
-    let {fieldValues, vsField, xField, yField} = this.state
+    let {vsField, xField} = this.state.trendParams
+    let {fieldValues, yField} = this.state
     // 一个对比字段值, 对应一条曲线
     let data = fieldValues[vsField].map(this.buildDataset)
     return {
       labels: fieldValues[xField], // x轴字段的值
-      datasets: [
-        {
-          label: yField + '趋势',
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderCapStyle: 'butt',
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: 'miter',
-          pointBorderColor: 'rgba(75,192,192,1)',
-          pointBackgroundColor: '#fff',
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-          pointHoverBorderColor: 'rgba(220,220,220,1)',
-          pointHoverBorderWidth: 2,
-          pointRadius: 1,
-          pointHitRadius: 10,
-          data,
-        },
-      ],
+      datasets: data,
     }
   }
 
   // 构建一个对比字段值对应的曲线数据
   buildDataset(vs){
     // trendValues 3维对象: 1 对比字段 2 x轴字段 3 tps/rt/err_pct
-    let {trendValues, fieldValues, xField, yField} = this.state
+    let {xField} = this.state.trendParams
+    let {trendValues, fieldValues, yField} = this.state
 
     let data = fieldValues[xField].map(x => // x轴字段的值
       trendValues[vs][x][yField]
