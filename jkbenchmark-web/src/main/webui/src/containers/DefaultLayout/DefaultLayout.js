@@ -27,7 +27,6 @@ class DefaultLayout extends Component {
   constructor(){
     super();
     this.state = {
-      apps:[],
       nav: [ // sidebar nav config
         /*{
           name: 'Charts',
@@ -43,22 +42,30 @@ class DefaultLayout extends Component {
     res = await res.json()
     //console.log(res)
     let apps = res.data;
-    let nav = apps.map(app => {
-        return {
-             name: app,
-             url: '/all',
-             icon: 'icon-star',
-             children: [
-               {
-                 name: 'Benchmark',
-                 url: '/benchmark?app=' + app,
-                 icon: 'icon-star',
-               }
-             ],
-           }
+    let nav = Object.keys(apps).map(app => {
+      // 子菜单
+      let children = []
+      children.push({
+         name: 'All Players',
+         url: `/benchmark?app=${app}`,
+         icon: 'icon-star',
+      })
+      let players = apps[app]
+      players.map(player => {
+        children.push({
+           name: player,
+           url: `/benchmark?app=${app}&player=${player}`,
+           icon: 'icon-star',
+        })
+      })
+      return {
+           name: app,
+           url: '/all',
+           icon: 'icon-star',
+           children,
+         }
     })
     this.setState({
-      apps,
       nav
     })
   }

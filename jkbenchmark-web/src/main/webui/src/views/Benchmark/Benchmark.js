@@ -41,15 +41,6 @@ const chartOptions = {
   maintainAspectRatio: false
 }
 
-// 过滤的字段名
-const filterFields = ['player', 'action', 'concurrents', 'requests', 'async'];
-
-// 轴字段值
-const axisFieldValues = {
-  vsField : filterFields,
-  xField : filterFields,
-  //yField : ['tps', 'rt', 'err_pct']
-}
 
 // y轴字段值
 const yFieldValues = ['tps', 'rt', 'err_pct']
@@ -58,8 +49,46 @@ const yFieldValues = ['tps', 'rt', 'err_pct']
  * 性能测试图表
  */
 class Benchmark extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
+
+    // 函数绑定
+    this.queryTrendValues = this.queryTrendValues.bind(this)
+    this.renderYFieldButton = this.renderYFieldButton.bind(this)
+    this.buildLineData = this.buildLineData.bind(this)
+    this.buildDataset = this.buildDataset.bind(this)
+
+    // 重置
+    let app = this.getQuery('app')
+    let player = this.getQuery('player') || null
+    this.reset(app, player)
+  }
+
+  // 重置
+  reset(app, player){
+    // app
+    this.app = app;
+    if(this.app == null){
+      alert("缺少参数: app");
+      return
+    }
+
+    // player
+    this.player = player;
+
+    // 过滤的字段名
+    this.filterFields = ['player', 'action', 'concurrents', 'requests', 'async'];
+    if(this.player) // 已指定了player, 则不参与查询
+        this.filterFields.splice(0, 1) // 删除
+
+    // 轴字段值
+    this.axisFieldValues = {
+      vsField : this.filterFields,
+      xField : this.filterFields,
+      //yField : ['tps', 'rt', 'err_pct']
+    }
+
+    // 状态
     this.state = {
       // 轴字段
       vsField: null, // 对比字段
@@ -67,7 +96,7 @@ class Benchmark extends Component {
       yField: 'tps', // y轴字段
 
       // 过滤字段
-      player: null,
+      player: this.player,
       action: null,
       concurrents: null,
       requests: null,
@@ -78,19 +107,29 @@ class Benchmark extends Component {
       trendParams:null, // 记录当前查询的参数
       trendValues:null,
     }
-
-    this.queryTrendValues = this.queryTrendValues.bind(this)
-    this.renderYFieldButton = this.renderYFieldButton.bind(this)
-    this.buildLineData = this.buildLineData.bind(this)
-    this.buildDataset = this.buildDataset.bind(this)
   }
 
   async componentDidMount(){
     this.queryFieldValues()    
   }
 
-  getQuery(name = ''){
-    let query = qs.parse(this.props.location.search);
+  componentWillReceiveProps(newProps) {
+    let newApp = this.getQuery('app', newProps.location.search)
+    let newPlayer = this.getQuery('player', newProps.location.search) || null
+
+    // app/player变化
+    if(newApp != this.app || newPlayer != this.player){
+      this.reset(newApp, newPlayer)
+      this.queryFieldValues()
+    }
+
+  }
+
+  getQuery(name, search = null){
+    if(search == null)
+      search = this.props.location.search
+    
+    let query = qs.parse(search);
     if(name == '')
         return query
 
@@ -99,13 +138,7 @@ class Benchmark extends Component {
 
   // 查询字段值
   async queryFieldValues(){
-    let app = this.getQuery('app')
-    if(app == null){
-      alert("缺少参数: app");
-      return
-    }
-
-    let query = 'app='+app
+    let query = 'app='+this.app
     let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/fieldValues?'+query)
     res = await res.json()
     //console.log(res)
@@ -125,8 +158,6 @@ class Benchmark extends Component {
     //console.log(this.state)
 
     // 收集参数
-    // app
-    let app = this.getQuery('app')
     // 轴字段
     let {vsField, xField} = this.state
     if(vsField == null){
@@ -141,10 +172,10 @@ class Benchmark extends Component {
       alert("xField 跟 vsField 不能一样");
       return
     }
-    let params = {app, vsField, xField}
+    let params = {app: this.app, player: this.player, vsField, xField}
 
     // 过滤字段
-    let fields = filterFields.filter(field => field != this.state.vsField && field != this.state.xField) // 过滤字段不包含比较字段+x轴字段
+    let fields = this.filterFields.filter(field => field != this.state.vsField && field != this.state.xField) // 过滤字段不包含比较字段+x轴字段
     for(let field of fields){
       let value = this.state[field]
       if(value == null){
@@ -167,7 +198,7 @@ class Benchmark extends Component {
 
   // 渲染轴字段的下拉框
   renderAxisFieldSelects(){
-    return Object.entries(axisFieldValues).map(entry => {
+    return Object.entries(this.axisFieldValues).map(entry => {
       let [key, fields] = entry
       if(key == 'xField'){ // x轴要去掉只有单个值的字段, 否则曲线数据只有一点, 无法成线
         fields = fields.filter(field => {
@@ -182,9 +213,14 @@ class Benchmark extends Component {
   // 渲染过滤字段的下拉框
   renderFilterFieldSelects(key, values){
     //console.log(this.state)
+    /*
     return Object.entries(this.state.fieldValues)
               .filter(entry => entry[0] != this.state.vsField && entry[0] != this.state.xField) // 过滤字段不包含比较字段+x轴字段
               .map(entry => this.renderSelect(entry[0], entry[1]))
+    */
+    return this.filterFields
+              .filter(v => v != this.state.vsField && v != this.state.xField) // 过滤字段不包含比较字段+x轴字段
+              .map(v => this.renderSelect(v, this.state.fieldValues[v] || []))
   }
 
   // 渲染下拉框

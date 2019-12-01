@@ -14,7 +14,7 @@ class BenchmarkResultServiceTest {
     fun testService(){
         val apps = BenchmarkResultService.getApps()
         println(apps)
-        val app = apps.first()
+        val app = apps.keys.first()
         val fvs = BenchmarkResultService.getFieldValues(app)
         println(fvs)
 

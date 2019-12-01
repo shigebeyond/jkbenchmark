@@ -13,8 +13,8 @@ object BenchmarkResultService {
      * 获得所有app
      * @return
      */
-    public fun getApps(): List<String> {
-        return BenchmarkResultModel.queryBuilder().distinct().select("app").findColumn<String>()
+    public fun getApps(): Map<String, List<String>> {
+        return BenchmarkResultModel.queryBuilder().distinct().select("app", "player").findMaps().groupBy({ it["app"] as String}, { it["player"] as String})
     }
 
     /**
