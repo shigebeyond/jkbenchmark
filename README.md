@@ -55,9 +55,13 @@ class DemoPlayer: IBenchmarkPlayer{
 
 ## 运行player的性能测试
 
+命令格式:
+
 ```
 java net.jkcode.jkbenchmark.BenchmarkApp player全类名
 ```
+
+例子:
 
 ```
 java net.jkcode.jkbenchmark.BenchmarkApp net.jkcode.jkbenchmark.tests.DemoPlayer
