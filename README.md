@@ -69,4 +69,29 @@ java net.jkcode.jkbenchmark.BenchmarkApp net.jkcode.jkbenchmark.tests.DemoPlayer
 
 # web图表
 
-访问
+## 启动
+
+1. 启动java后端
+直接启动主类 `net.jkcode.jkmvc.server.JettyServerLauncher`
+
+2. 启动前端
+```
+cd jkbenchmark-web/src/main/webui
+npm start
+```
+
+## web界面
+访问 http://localhost:3000/
+
+首页
+
+![](img/dashboard.png)
+
+某个app下的所有player
+
+![](img/allplayer.png)
+
+某个app下的单个player
+
+![](img/aplayer.png)
+

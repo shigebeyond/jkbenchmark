@@ -10,7 +10,7 @@ concurrents:
 requests:
   - 100
   - 200
+  - 300
 # 是否异步
 async:
   - false # 无异步
-  - true
