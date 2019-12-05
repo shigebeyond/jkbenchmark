@@ -11,7 +11,13 @@ dependencies {
     }
 }
 
+apply plugin: 'war'
 apply plugin: 'org.akhikhl.gretty'
+
+// 打包前端代码
+war {
+    from('./src/main/webui/build')
+}
 
 // 启动jetty
 gretty{

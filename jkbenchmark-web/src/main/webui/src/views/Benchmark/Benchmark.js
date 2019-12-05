@@ -61,11 +61,11 @@ class Benchmark extends Component {
     // 重置
     let app = this.getQuery('app')
     let player = this.getQuery('player') || null
-    this.reset(app, player)
+    this.reset(app, player, true)
   }
 
   // 重置
-  reset(app, player){
+  reset(app, player, init = false){
     // app
     this.app = app;
     if(this.app == null){
@@ -89,7 +89,7 @@ class Benchmark extends Component {
     }
 
     // 状态
-    this.state = {
+    let state = {
       // 轴字段
       vsField: null, // 对比字段
       xField: null, // x轴字段
@@ -107,6 +107,10 @@ class Benchmark extends Component {
       trendParams:null, // 记录当前查询的参数
       trendValues:null,
     }
+    if(init) // 构造函数
+      this.state = state;
+    else // componentWillReceiveProps
+      this.setState(state)
   }
 
   async componentDidMount(){
@@ -267,7 +271,7 @@ class Benchmark extends Component {
     let {trendValues, fieldValues, yField} = this.state
 
     let data = fieldValues[xField].map(x => // x轴字段的值
-      trendValues[vs][x][yField]
+      trendValues[vs] && trendValues[vs][x] && trendValues[vs][x][yField] || 0
     )
     
     return {
@@ -323,7 +327,7 @@ class Benchmark extends Component {
                 <Row>
                   <Col sm="5">
                     <Form action="" method="" inline>
-                      <Button type="button" size="sm" color="primary" onClick={this.queryTrendValues}><i className="fa fa-dot-circle-o"></i> Submit</Button>
+                      <Button type="button" size="sm" color="primary" onClick={this.queryTrendValues}><i className="fa fa-dot-circle-o"></i> 查询</Button>
                     </Form>
                   </Col>
                   <Col sm="7" className="d-none d-sm-inline-block">

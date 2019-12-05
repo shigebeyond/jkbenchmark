@@ -48,10 +48,10 @@ class Dashboard extends Component {
     })
   }
 
-  renderPlayer(player, i){
+  renderPlayer(app, player, i){
     return (
-      <div className="chart-wrapper">
-         {i+2}. <a key={i} href={"#/benchmark?app=demo&player="+player} className="card-header-action">{player}</a>
+      <div key={i} className="chart-wrapper">
+         {i+2}. <a href={"#/benchmark?app="+app+"&player="+player} className="card-header-action">{player}</a>
       </div>
       
     )
@@ -65,10 +65,10 @@ class Dashboard extends Component {
         </CardHeader>
         <CardBody>
           <div className="chart-wrapper">
-            1. <a href="#/benchmark?app=demo" className="card-header-action">All Players</a>
+            1. <a href={"#/benchmark?app="+app} className="card-header-action">All Players</a>
           </div>
           <div className="chart-wrapper">
-            {this.state.apps[app].map(this.renderPlayer)}
+            {this.state.apps[app].map((player, i) => this.renderPlayer(app, player, i))}
           </div>
         </CardBody>
       </Card>

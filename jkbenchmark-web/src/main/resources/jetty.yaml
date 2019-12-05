@@ -1,7 +1,7 @@
-threadNum: 6 # 默认是Runtime.getRuntime().availableProcessors()
+threadNum: 0 # 默认是Runtime.getRuntime().availableProcessors()
 #host: localhost # The network interface this connector binds to as an IP address or a hostname.  If null or 0.0.0.0 then bind to all interfaces.
 port: 8080
-webDir: jkbenchmark-web/src/main/webapp
-contextPath: /jkbenchmark-web
-logDir: jkbenchmark-web/jetty/logs
-tempDir: jkbenchmark-web/jetty/tmp
+webDir: src/main/webapp
+contextPath: /
+logDir: logs
+tempDir: tmp
