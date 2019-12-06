@@ -27,7 +27,7 @@ class BenchmarkApp(public val player: IBenchmarkPlayer) {
         /**
          * 调试的配置
          */
-        public val appConfig: Config = Config.instance("app", "yaml")
+        public val appConfig: Config = Config.instance("bmapp", "yaml")
 
         @JvmStatic
         fun main(args: Array<String>) {
@@ -80,7 +80,7 @@ class BenchmarkApp(public val player: IBenchmarkPlayer) {
 
     /**
      * 测试指定场景, 全自动化测试, 多测几遍, 取最优
-     *    如果 app.yaml 中 all = true, 则测试 scenes.yaml 所有场景
+     *    如果 bmapp.yaml 中 all = true, 则测试 scenes.yaml 所有场景
      *    否则, 测试 scene.yaml 单一场景
      */
     public fun run(){
