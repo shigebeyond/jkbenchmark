@@ -19,6 +19,13 @@ war {
     from('./src/main/webui/build')
 }
 
+// 复制start.sh
+task copyStartSh(type: Copy) {
+    into "${buildDir}/libs"
+    from "start-web.sh"
+}
+build.dependsOn(copyStartSh)
+
 // 启动jetty
 gretty{
     // server 配置
