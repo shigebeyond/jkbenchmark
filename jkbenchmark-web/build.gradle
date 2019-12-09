@@ -22,7 +22,7 @@ war {
 // 复制start.sh
 task copyStartSh(type: Copy) {
     into "${buildDir}/libs"
-    from "start-web.sh"
+    from "start-jetty.sh"
 }
 build.dependsOn(copyStartSh)
 

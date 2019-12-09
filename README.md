@@ -81,7 +81,7 @@ cd jkbenchmark-web/src/main/webui
 npm start
 ```
 
-## 生成环境的启动
+## 生产环境的启动
 
 1. 编译前端代码
 ```
@@ -105,13 +105,13 @@ gradle build -x test -Pall
 
 ```
 cd jkbenchmark-web/build/libs/
-./start-web.sh
+./start-jetty.sh
 ```
 
 ## web界面
 开发环境访问 http://localhost:3000/
 
-生成环境访问 http://localhost:8080/
+生产环境访问 http://localhost:8080/
 
 首页
 

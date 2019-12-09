@@ -8,17 +8,20 @@ fi
 cd `dirname $0`
 DIR=`pwd`
 
-PRO="jkbenchmark-web-1.9.0"
+WAR=`ls | grep .war`
+# 去掉.war后缀, 即可工程名
+PRO=${WAR%%.war}
+
 if [ ! -d $PRO ]; then
 	mkdir $PRO
 	cd $PRO
-	war=$PRO".war"
-	echo "解押"$war
-	unzip ../$war
+	echo "解押"$WAR
+	unzip ../$WAR
 fi
 cd $DIR
 
-sed -i "s/jkbenchmark-web\/src\/main\/webapp/'$PRO'/g" $PRO/WEB-INF/classes/jetty.yaml
+# 将 jetty.yaml 中的 webDir 配置项修改为当前项目路径
+sed -i "s/webDir: .*src\/main\/webapp/webDir: $PRO/g" $PRO/WEB-INF/classes/jetty.yaml
 
 echo "启动jetty"
 JAVA_OPTS="-Djava.net.preferIPv4Stack=true -server -Xms1g -Xmx1g -XX:MetaspaceSize=128m -Djava.util.concurrent.ForkJoinPool.common.parallelism=32"
