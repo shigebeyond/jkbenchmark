@@ -143,7 +143,7 @@ class Benchmark extends Component {
   // 查询字段值
   async queryFieldValues(){
     let query = 'app='+this.app
-    let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/fieldValues?'+query)
+    let res = await fetch('http://localhost:8080/benchmark/fieldValues?'+query)
     res = await res.json()
     //console.log(res)
     let fieldValues = res.data;
@@ -190,7 +190,7 @@ class Benchmark extends Component {
     }
     let query = qs.stringify(params)
     // 请求趋势数据
-    let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/trendValues?'+query)
+    let res = await fetch('http://localhost:8080/benchmark/trendValues?'+query)
     res = await res.json()
     //console.log(res)
     let trendValues = res.data;

@@ -14,7 +14,7 @@ class Dashboard extends Component {
   }
 
   async componentDidMount(){
-    let res = await fetch('http://localhost:8080/jkbenchmark-web/benchmark/apps')
+    let res = await fetch('http://localhost:8080/benchmark/apps')
     res = await res.json()
     //console.log(res)
     let apps = res.data || [];
