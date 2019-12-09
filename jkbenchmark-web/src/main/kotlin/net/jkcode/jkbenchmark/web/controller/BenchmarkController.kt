@@ -9,13 +9,6 @@ import net.jkcode.jkmvc.http.controller.Controller
 class BenchmarkController: Controller() {
 
     /**
-     * 主页
-     */
-    public fun indexAction() {
-        res.sendRedirect("build/")
-    }
-
-    /**
      * 获得所有app
      * http://localhost:8080/jkbenchmark-web/benchmark/apps
      */

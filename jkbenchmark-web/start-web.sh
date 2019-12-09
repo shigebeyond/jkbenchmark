@@ -18,7 +18,7 @@ if [ ! -d $PRO ]; then
 fi
 cd $DIR
 
-sed -i "s/src\/main\/webapp/'$PRO'/g" $PRO/WEB-INF/classes/jetty.yaml
+sed -i "s/jkbenchmark-web\/src\/main\/webapp/'$PRO'/g" $PRO/WEB-INF/classes/jetty.yaml
 
 echo "启动jetty"
 JAVA_OPTS="-Djava.net.preferIPv4Stack=true -server -Xms1g -Xmx1g -XX:MetaspaceSize=128m -Djava.util.concurrent.ForkJoinPool.common.parallelism=32"

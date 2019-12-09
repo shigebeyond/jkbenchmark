@@ -69,19 +69,49 @@ java net.jkcode.jkbenchmark.BenchmarkApp net.jkcode.jkbenchmark.tests.DemoPlayer
 
 # web图表
 
-## 启动
+## 开发环境下的启动
 
-1. 启动java后端
+1. 启动后端server
 直接启动主类 `net.jkcode.jkmvc.server.JettyServerLauncher`
 
-2. 启动前端
+2. 启动前端server
+
 ```
 cd jkbenchmark-web/src/main/webui
 npm start
 ```
 
+## 生成环境的启动
+
+1. 编译前端代码
+```
+cd jkbenchmark-web/src/main/webui
+npm run build
+```
+
+2. 编译后端代码
+
+```
+gradle build -x test -Pall
+```
+
+编译后的war文件在: jkbenchmark-web/build/libs/jkbenchmark-web-1.9.0.war
+
+3. 启动http容器
+
+3.1 你可以将 jkbenchmark-web-1.9.0.war 直接扔到 tomcat 的 webapps 中, 直接启动 tomcat 即可
+
+3.2 你也可以使用我写的内嵌jetty来启动
+
+```
+cd jkbenchmark-web/build/libs/
+./start-web.sh
+```
+
 ## web界面
-访问 http://localhost:3000/
+开发环境访问 http://localhost:3000/
+
+生成环境访问 http://localhost:8080/
 
 首页
 
