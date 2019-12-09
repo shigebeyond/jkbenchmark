@@ -1,0 +1,8 @@
+# 动作
+action: singleton
+# 并发数
+concurrents: 10
+# 请求数
+requests: 10000000
+# 是否异步
+async: false

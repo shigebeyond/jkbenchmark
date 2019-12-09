@@ -1,4 +1,4 @@
-include 'jkbenchmark-test', 'jkbenchmark-web'
+include 'jkbenchmark-test', 'jkbenchmark-web', 'serializer-benchmark'
 
 rootProject.name = 'jkbenchmark'
 

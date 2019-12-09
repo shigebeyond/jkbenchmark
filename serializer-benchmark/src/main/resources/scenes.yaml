@@ -1,0 +1,19 @@
+# 动作
+action:
+  - singleton
+  - threadsafe
+  - unshared
+# 并发数
+concurrents:
+  - 1
+  - 10
+  - 20
+  - 30
+# 请求数
+requests:
+  - 10000000
+  - 20000000
+  - 30000000
+# 是否异步
+async:
+  - false # 无异步

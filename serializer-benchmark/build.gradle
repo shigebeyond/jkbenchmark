@@ -1,0 +1,31 @@
+dependencies {
+
+    // other project
+    compile project(':jkbenchmark-test')
+}
+
+// 复制jar
+task copyLib(type: Copy) {
+    into "${buildDir}/${project.name}/libs"
+    from configurations.runtime
+    from "${buildDir}/libs/${project.name}-${project.version}.jar"
+}
+
+// 复制start.sh
+task copyStartSh(type: Copy) {
+    into "${buildDir}/${project.name}"
+    from "start.sh"
+}
+
+// 复制配置文件
+task copyConf(type: Copy) {
+    into "${buildDir}/${project.name}/conf"
+    from sourceSets.main.resources
+}
+
+// 打包
+if (project.hasProperty("all")){
+    build.finalizedBy(copyLib)
+    build.dependsOn(copyStartSh)
+    build.dependsOn(copyConf)
+}
