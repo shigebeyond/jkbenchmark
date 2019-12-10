@@ -1,8 +1,8 @@
 # 动作
 action:
-  - singleton
-  - threadsafe
-  - unshared
+  - singleton # 单例的 FSTConfiguration
+  - threadsafe # 线程安全的 FSTConfiguration
+  - unshared # 线程安全 + 不共享(不检查循环引用) 的 FSTConfiguration
 # 并发数
 concurrents:
   - 1
