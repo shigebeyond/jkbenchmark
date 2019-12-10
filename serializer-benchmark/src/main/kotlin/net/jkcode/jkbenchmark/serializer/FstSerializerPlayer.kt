@@ -2,23 +2,14 @@ package net.jkcode.jkbenchmark.serializer
 
 import net.jkcode.jkbenchmark.BenchmarkApp
 import net.jkcode.jkbenchmark.IBenchmarkPlayer
-import net.jkcode.jkutil.common.generateId
+import net.jkcode.jkutil.serialize.FstSerializer
 import org.nustaq.serialization.FSTConfiguration
-import java.io.Serializable
-
-data class Man(var name: String, var age: Int): Serializable {
-    val id = generateId("man")
-
-    override fun toString(): String {
-        return "${javaClass.name}: id=$id, name=$name, age=$age"
-    }
-}
 
 /**
  * 运行命令：
  * 　　　java net.jkcode.jkbenchmark.BenchmarkApp net.jkcode.jkbenchmark.serializer.FstSerializerPlayer
  */
-class FstSerializerPlayer: IBenchmarkPlayer{
+class FstSerializerPlayer: SerializerPlayer{
 
     companion object{
 
@@ -34,7 +25,12 @@ class FstSerializerPlayer: IBenchmarkPlayer{
     override val name: String = "fst"
 
     /**
-     * 单例
+     * 序列器
+     */
+    override val serializer = FstSerializer()
+
+    /**
+     * 1 单例
      */
     val conf: FSTConfiguration = FSTConfiguration.createDefaultConfiguration()
     fun callSingleton(i: Int){
@@ -42,7 +38,7 @@ class FstSerializerPlayer: IBenchmarkPlayer{
     }
 
     /**
-     * 线程安全
+     * 2 线程安全
      */
     val confs: ThreadLocal<FSTConfiguration> = ThreadLocal.withInitial {
         FSTConfiguration.createDefaultConfiguration()
@@ -52,7 +48,7 @@ class FstSerializerPlayer: IBenchmarkPlayer{
     }
 
     /**
-     * 线程安全 + 不共享(不检查循环引用)
+     * 3 线程安全 + 不共享(不检查循环引用)
      */
     val confs2: ThreadLocal<FSTConfiguration> = ThreadLocal.withInitial {
         val c = FSTConfiguration.createDefaultConfiguration()
@@ -80,6 +76,7 @@ class FstSerializerPlayer: IBenchmarkPlayer{
      */
     override fun getSyncAction(action: String): (Int) -> Any? {
         return when(action){
+            "default" -> this::callDefault // 调用 jkutil封装好的 FstSerializer, 实现等同于 callUnshared()
             "singleton" -> this::callSingleton
             "threadsafe" -> this::callThreadsafe
             "unshared" -> this::callUnshared
