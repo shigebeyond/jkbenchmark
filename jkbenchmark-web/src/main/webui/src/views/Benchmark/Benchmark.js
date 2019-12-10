@@ -43,7 +43,7 @@ const chartOptions = {
 
 
 // y轴字段值
-const yFieldValues = ['tps', 'rt', 'err_pct']
+const yFieldValues = ['tps', 'rt', 'err_pct', 'run_time']
 
 /**
  * 性能测试图表

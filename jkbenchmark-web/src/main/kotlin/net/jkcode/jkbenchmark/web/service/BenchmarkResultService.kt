@@ -45,7 +45,7 @@ object BenchmarkResultService {
         for((k, v) in where)
             if(k != vsField && k != xField)
                 query.where(k, "=", v)
-        val rows = query.select(vsField, xField, "tps", "rt", "err_pct").orderBy(vsField).orderBy(xField).findMaps()
+        val rows = query.select(vsField, xField, "tps", "rt", "err_pct", "run_time").orderBy(vsField).orderBy(xField).findMaps()
         val result = HashMap<String, HashMap<String, Map<String, Any?>>>()
         for(row in rows){
             result.getOrPut(row[vsField].toString()) {
