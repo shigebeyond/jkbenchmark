@@ -44,10 +44,10 @@ class FstSerializerPlayer: IBenchmarkPlayer{
     /**
      * 线程安全
      */
+    val confs: ThreadLocal<FSTConfiguration> = ThreadLocal.withInitial {
+        FSTConfiguration.createDefaultConfiguration()
+    }
     fun callThreadsafe(i: Int){
-        val confs: ThreadLocal<FSTConfiguration> = ThreadLocal.withInitial {
-            FSTConfiguration.createDefaultConfiguration()
-        }
         callFst(confs.get())
     }
 
