@@ -85,8 +85,9 @@ class BenchmarkApp(public val player: IBenchmarkPlayer) {
      */
     public fun run(){
         // 获得场景配置
+        val all: Boolean = appConfig["all"]!! // 测试 scenes.yaml 所有场景
         val sceneConfigs: List<Config> =
-                if(appConfig["all"]!!) { // 测试 scenes.yaml 所有场景
+                if(all) { // 测试 scenes.yaml 所有场景
                     roundLogger.info("Player [${player.name}] Run all scenes in scenes.yaml\n")
                     listAllSceneConfigs()
                 }else{ // 测试 scene.yaml 单一场景
@@ -119,7 +120,8 @@ class BenchmarkApp(public val player: IBenchmarkPlayer) {
         }
 
         // 解析result.log
-        BenchmarkResultAnalyzer.parseResultLog("logs/", name)
+        if(all)
+            BenchmarkResultAnalyzer.parseResultLog("logs/", name)
     }
 
 }
