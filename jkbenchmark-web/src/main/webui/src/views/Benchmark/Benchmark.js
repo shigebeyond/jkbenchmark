@@ -57,6 +57,7 @@ class Benchmark extends Component {
     this.renderYFieldButton = this.renderYFieldButton.bind(this)
     this.buildLineData = this.buildLineData.bind(this)
     this.buildDataset = this.buildDataset.bind(this)
+    this.handleNoErr = this.handleNoErr.bind(this)
 
     // 重置
     let app = this.getQuery('app')
@@ -101,6 +102,9 @@ class Benchmark extends Component {
       concurrents: null,
       requests: null,
       async: null,
+
+      // 是否排除错误数据, 但其实在tps中, 如果有错的话, tps没有对比的必要, 一般的错都是直接拒绝的错误, 导致tps很高
+      noErr: false,
 
       // 数据
       fieldValues:{},
@@ -252,6 +256,11 @@ class Benchmark extends Component {
     return (<Button key={i} color="outline-secondary" onClick={() => this.setState({yField: v})} active={this.state.yField === v}>{v}</Button>)
   }
 
+  // 是否排除错误数据
+  handleNoErr(e){
+    this.setState({noErr: e.target.checked});
+  }
+
   // 构建曲线数据
   buildLineData(){
     let {vsField, xField} = this.state.trendParams
@@ -268,11 +277,14 @@ class Benchmark extends Component {
   buildDataset(vs, i){
     // trendValues 3维对象: 1 对比字段 2 x轴字段 3 tps/rt/err_pct
     let {xField} = this.state.trendParams
-    let {trendValues, fieldValues, yField} = this.state
+    let {trendValues, fieldValues, yField, noErr} = this.state
 
-    let data = fieldValues[xField].map(x => // x轴字段的值
-      trendValues[vs] && trendValues[vs][x] && trendValues[vs][x][yField] || 0
-    )
+    let data = fieldValues[xField].map(x => {// x轴字段的值
+      let value = trendValues[vs] && trendValues[vs][x] || null
+      if(value && noErr && yField != 'err_pct' && value['err_pct'] > 0) // 排除错误数据
+        return 0
+      return value[yField] || 0
+    })
     
     return {
       label: `${vs}趋势`,
@@ -321,6 +333,10 @@ class Benchmark extends Component {
                   <Col xs="12" md="10">
                     <Form action="" method="" inline>
                       {this.renderFilterFieldSelects()}
+                      <FormGroup check inline>
+                        <Label className="form-check-label" check htmlFor="">no error</Label>
+                        <Input className="form-check-input" type="checkbox" value="" onClick={this.handleNoErr} />
+                      </FormGroup>
                     </Form>
                   </Col>
                 </Row>
