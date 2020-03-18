@@ -23,7 +23,7 @@ object BenchmarkResultAnalyzer {
      */
     private fun createTable() {
         val `is` = Thread.currentThread().contextClassLoader.getResourceAsStream("benchmark.sql")
-        val txt = InputStreamReader(`is`).readText()
+        val txt = `is`.reader().readText()
         val sqls = txt.split(";\\s+".toRegex())
         for(sql in sqls)
             Db.instance().execute(sql)
