@@ -31,7 +31,7 @@ class BenchmarkController: Controller() {
      */
     public fun trendValuesAction(){
         // 全部参数就是where
-        val where = HashMap(req.httpParams)
+        val where = HashMap(req.validatingParams)
         val vsField = where.remove("vsField")!!
         val xField = where.remove("xField")!!
         res.renderJson(0, null, BenchmarkResultService.getTrendValues(where, vsField, xField))
