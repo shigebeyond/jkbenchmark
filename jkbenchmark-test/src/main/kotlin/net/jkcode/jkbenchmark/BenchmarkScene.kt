@@ -74,6 +74,10 @@ class BenchmarkScene(
         val start = currMillis()
         var requests: Int = appConfig["warmupRequests"]!! // 热身请求数
         logger.info("Warmup start: n$requests")
+
+        // 前置事件
+        player.beforeScene(sceneConfig["action"]!!)
+
         val latch = CountDownLatch(requests)
         for(i in 1..requests){
             callAction(i) { r, ex ->
@@ -87,6 +91,10 @@ class BenchmarkScene(
         latch.await()
         val runTime = (currMillis() - start)
         logger.info("Warmup end: cost $runTime ms")
+
+        // 后置事件
+        player.afterScene(sceneConfig["action"]!!)
+
         Thread.sleep(3000)
     }
 
@@ -105,6 +113,9 @@ class BenchmarkScene(
         logger.info("Test start: $name")
         val latch = CountDownLatch(requests)
         val pool = Executors.newFixedThreadPool(concurrents)
+
+        // 前置事件
+        player.beforeScene(sceneConfig["action"]!!)
 
         val rtMsFraction = 1000 // 千分之一毫秒
         val rtNsMultiple = 1000000L / rtMsFraction
@@ -147,6 +158,9 @@ class BenchmarkScene(
         latch.await()
         runTime = System.nanoTime() / rtNsMultiple - start
         logger.info(MessageFormat.format("Test response end: cost {0,number,#.##} ms", runTime.toDouble() / rtMsFraction))
+
+        // 后置事件
+        player.afterScene(sceneConfig["action"]!!)
 
         // 打印性能测试结果
         val result = BenchmarkResult(measurer.bucketCollection(), runTime)

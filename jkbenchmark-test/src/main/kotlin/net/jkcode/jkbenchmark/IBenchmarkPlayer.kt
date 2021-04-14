@@ -18,6 +18,18 @@ interface IBenchmarkPlayer {
     val name: String;
 
     /**
+     * 场景运行前置事件
+     */
+    fun beforeScene(action: String){
+    }
+
+    /**
+     * 场景运行后置事件
+     */
+    fun afterScene(action: String){
+    }
+
+    /**
      * 获得异步动作
      * @param 动作名
      * @return 对应的方法调用
