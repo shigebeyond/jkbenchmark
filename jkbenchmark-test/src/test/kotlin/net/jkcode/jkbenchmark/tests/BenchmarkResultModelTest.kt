@@ -49,21 +49,26 @@ class BenchmarkResultModelTest {
 
     @Test
     fun testFormat(){
-        //val field = "tps"
+//        val field = "tps"
         val field = "rt"
+        val hasHikari = false
 
         val actions = BenchmarkResultModel.queryBuilder()
                 .selectDistinct("action")
                 .where("requests", 100000)
                 .findColumn<String>()
-        val players = arrayOf("jkorm-druid", "jkorm-hikari", "mybatis")
+        val players = if(hasHikari)
+                        arrayOf("jkorm-druid", "jkorm-hikari", "mybatis")
+                    else
+                        arrayOf("jkorm-druid", "mybatis")
         val str = StringBuilder()
         str.append(" | 测试场景 ")
         for (player in players){
             str.append("| $player $field ")
         }
-        str.appendln(" | 性能排序 | jkorm-druid/mybatis | jkorm-hikari/mybatis | 最优 |")
-        str.appendln("|--------|-----------|---------|--------------|--------------|--------------|--------------|--------------|")
+        val htitle = if(hasHikari) "jkorm-hikari/mybatis |" else ""
+        str.appendln(" | 性能排序 | jkorm-druid/mybatis | $htitle 最优 |")
+        str.appendln("|--------|-----------|---------|--------------|--------------|--------------|--------------|" + if (hasHikari) "--------------|" else "")
         for (action in actions) {
             str.append("| $action ")
             val results = BenchmarkResultModel.queryBuilder()
@@ -87,12 +92,14 @@ class BenchmarkResultModelTest {
             str.append("| ").append(orderPlayers.joinToString(" > "))
 
             // 比例
-            var druid: Double = player2result["jkorm-druid"]!![field]
-            var hikari: Double = player2result["jkorm-hikari"]!![field]
-            var mybatis: Double = player2result["mybatis"]!![field]
             val df = DecimalFormat("0.00")
+            var mybatis: Double = player2result["mybatis"]!![field]
+            var druid: Double = player2result["jkorm-druid"]!![field]
             str.append("| " + df.format(druid * 100 / mybatis) + " % ")
-            str.append("| " + df.format(hikari * 100 / mybatis) + " % ")
+            if(hasHikari) {
+                var hikari: Double = player2result["jkorm-hikari"]!![field]
+                str.append("| " + df.format(hikari * 100 / mybatis) + " % ")
+            }
 
             str.append(" | " + results.first().player)
 
