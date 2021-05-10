@@ -9,8 +9,8 @@ dependencies {
         compile project(':jkguard')
         compile project(':jkmvc-orm') // orm
     }else{
-        compile "net.jkcode.jkutil:jkutil:$jkutil_version"
-        compile "net.jkcode.jkguard:jkguard:$jkguard_version"
+        compile "net.jkcode.jkmvc:jkutil:$jkutil_version"
+        compile "net.jkcode.jkmvc:jkguard:$jkguard_version"
         compile "net.jkcode.jkmvc:jkmvc-orm:$jkmvc_version" // orm
     }
 
