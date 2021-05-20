@@ -110,7 +110,8 @@ subprojects{
     }
 
     // 发布到maven中央库
-    if(!project.name.endsWith('example') && !project.name.endsWith('demo') && !project.name.endsWith('benchmark')){
+    // 只有 jkbenchmark-test 需要上传
+    if(project.name == 'jkbenchmark-test'){
         apply plugin: 'maven-publish'
         apply plugin: 'signing'
 
