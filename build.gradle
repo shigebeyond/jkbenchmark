@@ -34,7 +34,7 @@ buildscript {
 
 // 所有工程
 allprojects{
-    group 'net.jkcode.jkmvc'
+    group 'net.jkcode'
     version '1.9.0'
 }
 
