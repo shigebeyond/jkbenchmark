@@ -1,8 +1,11 @@
 # Jkbenchmark
-
 性能测试框架, 提供类库帮助你开发性能测试代码, 提供web图表帮助你分析性能结果
 
-# 开发性能测试代码
+主要有2个模块
+1. jkbenchmark-test, 辅助开发性能测试代码
+2. jkbenchmark-web, 图表化显示性能测试结果
+
+# 使用 jkbenchmark-test 开发性能测试代码
 
 ## 概念
 1. app -- 应用, 表示某个方面的性能测试.
@@ -16,6 +19,21 @@
 5. requests -- 请求数
 
 6. async -- 是否异步
+
+## 添加依赖
+1. gradle
+```
+compile "net.jkcode:jkbenchmark-test:1.9.0"
+```
+
+2. maven
+```
+<dependency>
+    <groupId>net.jkcode</groupId>
+    <artifactId>jkbenchmark-test</artifactId>
+    <version>1.9.0</version>
+</dependency>
+```
 
 ## 开发 Player
 
@@ -67,7 +85,7 @@ java net.jkcode.jkbenchmark.BenchmarkApp player全类名
 java net.jkcode.jkbenchmark.BenchmarkApp net.jkcode.jkbenchmark.tests.DemoPlayer
 ```
 
-# web图表
+# 用 jkbenchmark-web 图表化展示性能测试结果
 
 ## 开发环境下的启动
 
