@@ -87,7 +87,19 @@ java net.jkcode.jkbenchmark.BenchmarkApp net.jkcode.jkbenchmark.tests.DemoPlayer
 
 # 用 jkbenchmark-web 图表化展示性能测试结果
 
-## 开发环境下的启动
+## docker启动
+```
+# 拉镜像
+docker pull registry.cn-hangzhou.aliyuncs.com/shigebeyond/jkbmweb:1.0
+# 建容器
+docker run -d --network host --name jkbmweb registry.cn-hangzhou.aliyuncs.com/shigebeyond/jkbmweb:1.0
+```
+
+注意：要在本地搭建mysql数据源
+
+## 源码启动
+
+### 开发环境下的启动
 
 1. 启动后端server
 直接启动主类 `net.jkcode.jkmvc.server.JettyServerLauncher`
@@ -99,12 +111,28 @@ cd jkbenchmark-web/src/main/webui
 npm start
 ```
 
-## 生产环境的启动
+### 生产环境的启动
 
 1. 编译前端代码
 ```
 cd jkbenchmark-web/src/main/webui
+# 安装依赖，只需跑一次
+npm i
+# 编译
 npm run build
+# 运行
+npm start
+```
+
+运行报错:`react-scripts: not found`
+解决:重新安装依赖`npm i`
+
+安装依赖报错:node-sass编译出错
+解决
+```
+# 重新编译node-sass
+npm rebuild node-sass
+# 如果安装依赖继续报错，则修改 package.json，去掉node-sass依赖，然后再重新安装依赖
 ```
 
 2. 编译后端代码
