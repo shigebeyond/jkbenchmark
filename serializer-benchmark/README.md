@@ -32,7 +32,7 @@ async:
 
 ## 性能测试结果
 
-结果数据见 benchmark_result_data.sql
+结果数据见 [结果sql](serializer-benchmark/benchmark_result.sql)
 
 总体性能: `unshared` > `threadsafe` > `singleton`
 
