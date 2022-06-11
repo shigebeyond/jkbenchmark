@@ -49,8 +49,8 @@ class BenchmarkResultModelTest {
 
     @Test
     fun testFormat(){
-//        val field = "tps"
-        val field = "rt"
+        val field = "tps"
+//        val field = "rt"
         val hasHikari = false
 
         val actions = BenchmarkResultModel.queryBuilder()
@@ -68,7 +68,7 @@ class BenchmarkResultModelTest {
         }
         val htitle = if(hasHikari) "jkorm-hikari/mybatis |" else ""
         str.appendln(" | 性能排序 | jkorm-druid/mybatis | $htitle 最优 |")
-        str.appendln("|--------|-----------|---------|--------------|--------------|--------------|--------------|" + if (hasHikari) "--------------|" else "")
+        str.appendln("|--------|-----------|---------|--------------|--------------|--------------|" + if (hasHikari) "--------------|" else "")
         for (action in actions) {
             str.append("| $action ")
             val results = BenchmarkResultModel.queryBuilder()
@@ -80,16 +80,28 @@ class BenchmarkResultModelTest {
             val player2result = results.associate {
                 it.player to it
             }
+            val values = ArrayList<Double>()
             for(player in players) {
-                val value: Any = player2result[player]!![field]
+                val value: Double = player2result[player]!![field]
                 str.append("| $value ")
+                values.add(value)
             }
 
             // 排序
+            /*
             val orderPlayers = results.map {
                 it.player
             }
-            str.append("| ").append(orderPlayers.joinToString(" > "))
+            str.append("| ").append(orderPlayers.joinToString(" > "))//没有处理相等
+            */
+            str.append("| ").append(results[0].player)
+            for(i in 1 until results.size){
+                val player = results[i].player
+                var op = " > "
+                if(values[i] == values[i-1])
+                    op = " = "
+                str.append(op).append(player)
+            }
 
             // 比例
             val df = DecimalFormat("0.00")
