@@ -24,3 +24,7 @@ yarn-error.log*
 yarn.lock
 /gradlew
 /gradlew.bat
+jphp-java-ext
+jkguard
+jkmvc
+jkutil

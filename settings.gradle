@@ -4,24 +4,15 @@ rootProject.name = 'jkbenchmark'
 
 // 添加子项目
 if(env == 'dev') {
-    // jkutil
-    include 'jkutil'
-    project(':jkutil').projectDir = new File('../jkutil')
+	include "jkutil", "jkguard", "jphp-java-ext"
 
-    // 应用守护
-    include 'jkguard'
-    project(':jkguard').projectDir = new File('../jkguard')
+	include "jkmvc-orm"
+	project(':jkmvc-orm').projectDir = new File('jkmvc/jkmvc-orm')
 
-    // jphp扩展
-    include 'jphp-java-ext'
-    project(':jphp-java-ext').projectDir = new File('../jphp-java-ext')
+	include "jkmvc-http"
+	project(':jkmvc-http').projectDir = new File('jkmvc/jkmvc-http')
 
-    include 'jkmvc-orm'
-    project(':jkmvc-orm').projectDir = new File('../jkmvc/jkmvc-orm')
+	include "jkmvc-server-jetty"
+	project(':jkmvc-server-jetty').projectDir = new File('jkmvc/jkmvc-server-jetty')
 
-    include 'jkmvc-http'
-    project(':jkmvc-http').projectDir = new File('../jkmvc/jkmvc-http')
-
-    include 'jkmvc-server-jetty'
-    project(':jkmvc-server-jetty').projectDir = new File('../jkmvc/jkmvc-server-jetty')
 }
